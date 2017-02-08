@@ -43,11 +43,15 @@ Here's a pretty graphical diagram of all the above information...
 
 ### Prerequisites
 
-1. You need an active AWS account and a AWS API credentials. Please read our five-minute "Bootstrapping AWS" guide if you do not have this yet.
+1. You need an active AWS account and a AWS API credentials. Please read our five-minute "Bootstrapping AWS" guide if you do not have an AWS account or AWS API credentials.
 
-2. Install Hashicorp's [Terraform](https://terraform.io).
+2. You need to install the following third-party tools. You can perform this manually or run `bin/setup-required-tools`:
 
-3. Install Kubernetes Ops ("kops") tool.
+| Tool                 | Description                           |
+| -------------------- | ------------------------------------- |
+| [Terraform](https://terraform.io) | Infrastructure provisioning tool. | 
+| [Kubectl](https://example.org) | Kubernetes CLI |
+| [kops](https://example.org) | Kubernetes Ops ("kops") |
 
 ### Sanity Checking
 
