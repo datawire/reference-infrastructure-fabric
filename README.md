@@ -2,11 +2,11 @@
 
 Bootstrapping a microservices system is often a very difficult process for many small teams because there is a diverse ecosystem of tools that span a number of technical disciplines from operations to application development. This repository is intended for a single developer on a small team that meets all of the following criteria:
 
-1. Is building a simple "modern" web application using a service-oriented or microservices approach (or equivalent if it's not a business). 
+1. Building a simple modern web application using a service-oriented or microservices approach.
 
-2. Wants to use Amazon Web Services ("AWS") because of its best-in-class commodity "run-and-forget" infrastructure such as RDS MySQL, PostgreSQL, Elasticsearch or Redis.
+2. Using Amazon Web Services ("AWS") because of its best-in-class commodity "run-and-forget" infrastructure such as RDS MySQL, PostgreSQL, Elasticsearch or Redis.
 
-3. Has limited operations experience and wants to "get going quickly" but with a reasonably architected foundation that will not cause major headaches two weeks down the road because the foundation "was just a toy".
+3. Limited operations experience or budget and wants to "get going quickly" but with a reasonably architected foundation that will not cause major headaches two weeks down the road because the foundation "was just a toy".
 
 If all the above criteria match then this project is for you and you should keep reading!
 
