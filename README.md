@@ -57,6 +57,16 @@ Run the script `bin/sanity` to check that everything is OK for deployment.
 
 Clone this repository into your own account or organization.
 
+### Configure a couple of things
+
+### Generate the AWS networking environment
+
+### Verify the AWS networking environment
+
+### Generate the Kubernetes cluster configuration
+
+### Generate the Kubernetes cluster
+
 ## Next Steps
 
 Check out Datawire's Reference Application - Snackchat! 
