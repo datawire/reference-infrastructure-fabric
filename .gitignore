@@ -1,0 +1,9 @@
+# --- IntelliJ IDEA ---
+.idea
+
+# --- KDE ---
+.directory
+
+# --- macOS / Mac OS X ---
+.DS_Store
+
