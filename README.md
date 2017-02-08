@@ -25,15 +25,21 @@ Similarly the term "modern" is ambiguous, but for the purpose of this architectu
 
 ## Technical Design in Five Minutes
 
-**NOTE**: More advanced documentation is available in [docs/](docs/).
+**NOTE**: More in-depth documentation is available in [docs/](docs/).
 
-To keep this infrastructure fabric simple, but also robust we are going to make some opinionated design decisions. The following things will be performed on AWS:
+To keep this infrastructure fabric simple, but also robust we are going to make some opinionated design decisions.
+
+### Base Network (VPC)
 
 1. A single new Virtual Private Cloud ("VPC") will be created in a single region (us-east-2 "Ohio") that holds the Kubernetes cluster along with all long-lived systems (e.g. databases). A VPC is a namespace for networking. It provides strong network-level isolation from other "stuff" running in an AWS account. It's a good idea to create a separate VPC rather than relying on the default AWS VPC because over time the default VPC becomes cluttered and hard to maintain or keep configured properly with other systems and VPC's are a cost-free abstraction in AWS.
 
-2. The VPC will be segmented into several subnets that are assigned to at least three availability zones ("AZ") within the region. An availability zone in AWS is a physically isolated datacenter within a region that has high-performance networking links with the other AZ's in the *same* region. The individual subnets will be used to ensure that both the Kubernetes cluster as well as any other systems such as an RDS database can be run simultaneously in at least two availability zones to ensure there is some robustness in the infrastructure fabric in case one zone fails.
+### Subnets
 
-3. A Kubernetes cluster will be installed into the newly created VPC and setup with a single master node and several worker nodes. Despite the single master node this is still a HA setup because the worker nodes which actually run containers will be spread across several availability zones. In the rare, but potential situation where the master node fails the Kubernetes system will continue to be available until the master is automatically replaced (the mechanics of this are documented in [/docs/high_availability.md](docs/high_availability.md).
+The VPC will be segmented into several subnets that are assigned to at least three availability zones ("AZ") within the region. An availability zone in AWS is a physically isolated datacenter within a region that has high-performance networking links with the other AZ's in the *same* region. The individual subnets will be used to ensure that both the Kubernetes cluster as well as any other systems such as an RDS database can be run simultaneously in at least two availability zones to ensure there is some robustness in the infrastructure fabric in case one AZ fails.
+
+### Kubernetes
+
+A Kubernetes cluster will be installed into the newly created VPC and setup with a single master node and several worker nodes spanning three availability zones. Despite the single master node this is still a HA setup because the worker nodes which actually run Kubernetes pods are spread across several availability zones. In the rare but potential situation where the master node fails the Kubernetes system will continue to be available until the master is automatically replaced (the mechanics of this are documented in [/docs/high_availability.md](docs/high_availability.md).
 
 ### Diagram
 
@@ -47,23 +53,30 @@ Here's a pretty graphical diagram of all the above information...
 
 2. You need to install the following third-party tools. You can perform this manually or run `bin/setup-required-tools`:
 
-| Tool                 | Description                           |
-| -------------------- | ------------------------------------- |
+| Tool                              | Description                           |
+| --------------------------------- | ------------------------------------- |
 | [Terraform](https://terraform.io) | Infrastructure provisioning tool. | 
-| [Kubectl](https://example.org) | Kubernetes CLI |
-| [kops](https://example.org) | Kubernetes Ops ("kops") |
-
-### Sanity Checking
-
-Run the script `bin/sanity` to check that everything is OK for deployment.
+| [Kubectl](https://example.org)    | Kubernetes CLI |
+| [kops](https://example.org)       | Kubernetes Ops ("kops") |
 
 ### Clone Repository
 
 Clone this repository into your own account or organization.
 
-### Configure a couple of things
+### Sanity Checking
+
+Automated sanity checking of both your local developer setup and your AWS account can be performed by running `bin/check_sanity` before continuing any further.
+
+To run the sanity checker run the following command: `make sanity`. The sanity checker offers useful actionable feedback if it finds issues.
 
 ### Generate the AWS networking environment
+
+The basic outline to get the networking setup is:
+
+1. Terraform generates a deterministic execution plan for the infrastructure it needs to create on AWS.
+2. Terraform executes the plan and creates the necessary infrastructure.
+
+... Detail Instructions TBD ...
 
 ### Verify the AWS networking environment
 
