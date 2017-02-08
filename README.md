@@ -45,7 +45,7 @@ Before the Kubernetes cluster can be provisioned a public DNS record in AWS Rout
 
 ### Kubernetes
 
-A Kubernetes cluster will be installed into the newly created VPC and setup with a single master node and several worker nodes spanning three availability zones. Despite the single master node this is still a HA setup because the worker nodes which actually run Kubernetes pods are spread across several availability zones. In the rare but potential situation where the master node fails the Kubernetes system will continue to be available until the master is automatically replaced (the mechanics of this are documented in [/docs/high_availability.md](docs/high_availability.md).
+A Kubernetes cluster will be installed into the newly created VPC and setup with a single master node and several worker nodes spanning three availability zones. Despite the single master node this is still a HA setup because the worker nodes which actually run Kubernetes pods are spread across several availability zones. In the rare but potential situation where the master node fails the Kubernetes system will continue to be available until the master is automatically replaced (the mechanics of this are documented in [docs/high_availability.md](docs/high_availability.md).
 
 ### Diagram
 
@@ -55,7 +55,7 @@ Here's a pretty graphical diagram of all the above information...
 
 ### Prerequisites
 
-1. You need an active AWS account and a AWS API credentials. Please read our five-minute "Bootstrapping AWS" guide if you do not have an AWS account or AWS API credentials.
+1. You need an active AWS account and a AWS API credentials. Please read our five-minute [AWS Bootstrapping](docs/aws_bootstrap.md) guide if you do not have an AWS account or AWS API credentials.
 
 2. You need to install the following third-party tools. You can perform this manually or run `bin/setup-required-tools`:
 
@@ -71,7 +71,7 @@ Clone this repository into your own account or organization.
 
 ### Set your Domain Name
 
-Update the `terraform.tfvars` file by finding the `domain_name` key and updating it with the value of the domain name you purchased. 
+Update the `terraform.tfvars.json` file by finding the `domain_name` key and updating it with the value of the domain name you purchased. 
 
 ### Sanity Checking
 
