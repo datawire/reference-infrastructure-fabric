@@ -4,7 +4,7 @@ In order to get started with this basic AWS + Kubernetes infrastructure fabric t
 
 1. An Amazon Web Services ("AWS") account.
 2. An AWS user account with administrator privileges that allow you to provision the infrastructure fabric.
-3. Install the official AWS command line toolchain.
+3. Install the official AWS command line tool.
 
 ## Get an AWS account
 
@@ -25,3 +25,15 @@ If you're part of an organization you should check and see if you're already pay
 If you already had an AWS account then the following steps may or may not apply depending on how much control you have over your AWS account.
 
 ... TBD ...
+
+## Setup AWS command line tool
+
+The easiest way to get and use the `aws` command is to install it into the user's Python environment with `pip`. See the [official documentation](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) for available options if this is not suitable for some reason.
+
+### Linux
+
+`pip install --upgrade --user awscli`
+
+### macOS / Mac OS X
+
+`sudo pip install --upgrade --user awscli --ignore-installed six`

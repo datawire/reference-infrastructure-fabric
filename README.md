@@ -37,6 +37,8 @@ A single new Virtual Private Cloud ("VPC") will be created in a single region (u
 
 The VPC will be segmented into several subnets that are assigned to at least three availability zones ("AZ") within the region. An availability zone in AWS is a physically isolated datacenter within a region that has high-performance networking links with the other AZ's in the *same* region. The individual subnets will be used to ensure that both the Kubernetes cluster as well as any other systems such as an RDS database can be run simultaneously in at least two availability zones to ensure there is some robustness in the infrastructure fabric in case one AZ fails.
 
+The deployed network fabric will not have an external vs. internal subnet distinction to avoid NAT gateways.
+
 ### DNS
 
 **NOTE:** Explore creative ways to make this not suck.
