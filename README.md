@@ -37,6 +37,12 @@ A single new Virtual Private Cloud ("VPC") will be created in a single region (u
 
 The VPC will be segmented into several subnets that are assigned to at least three availability zones ("AZ") within the region. An availability zone in AWS is a physically isolated datacenter within a region that has high-performance networking links with the other AZ's in the *same* region. The individual subnets will be used to ensure that both the Kubernetes cluster as well as any other systems such as an RDS database can be run simultaneously in at least two availability zones to ensure there is some robustness in the infrastructure fabric in case one AZ fails.
 
+### DNS
+
+**NOTE:** Explore creative ways to make this not suck.
+
+Before the Kubernetes cluster can be provisioned a public DNS record in AWS Route 53 needs to exist, for example, at [Datawire](https://datawire.io) we own the mysterious `k736.net`. It is **strongly** recommended that you buy a domain name for this part of your infrastructure and do not use an existing one.
+
 ### Kubernetes
 
 A Kubernetes cluster will be installed into the newly created VPC and setup with a single master node and several worker nodes spanning three availability zones. Despite the single master node this is still a HA setup because the worker nodes which actually run Kubernetes pods are spread across several availability zones. In the rare but potential situation where the master node fails the Kubernetes system will continue to be available until the master is automatically replaced (the mechanics of this are documented in [/docs/high_availability.md](docs/high_availability.md).
@@ -62,6 +68,10 @@ Here's a pretty graphical diagram of all the above information...
 ### Clone Repository
 
 Clone this repository into your own account or organization.
+
+### Set your Domain Name
+
+Update the `terraform.tfvars` file by finding the `domain_name` key and updating it with the value of the domain name you purchased. 
 
 ### Sanity Checking
 
