@@ -83,7 +83,7 @@ To run the sanity checker run the following command: `make sanity`. The sanity c
 
 ### Generate the AWS networking environment
 
-The basic outline to get the networking setup is:
+The high-level steps to get the networking setup are:
 
 1. Terraform generates a deterministic execution plan for the infrastructure it needs to create on AWS.
 2. Terraform executes the plan and creates the necessary infrastructure.
@@ -95,6 +95,12 @@ The basic outline to get the networking setup is:
 ### Generate the Kubernetes cluster configuration
 
 ### Generate the Kubernetes cluster
+
+The high-level steps to get the Kubernetes cluster setup are:
+
+1. Update the `kops` tool cluster specification files so Kops can generate Terraform configs to provision in the newly created VPC.
+2. Generate the Terraform module for the new Kubernetes cluster.
+3. Apply the generated Terraform configuration for the Kubernetes cluster.
 
 ## Next Steps
 
