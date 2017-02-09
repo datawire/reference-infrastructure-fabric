@@ -10,3 +10,7 @@
 # --- Python ---
 venv
 *.pyc
+
+# --- Terraform ---
+plan.out
+*.tfstate*
