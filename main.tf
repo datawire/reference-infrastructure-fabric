@@ -1,25 +1,31 @@
 // file: main.tf
 
+provider "aws" {
+  region = "${var.fabric_region}"
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Networking
 // ---------------------------------------------------------------------------------------------------------------------
 
 module "main_network" {
-  source             = "modules/vpc"
-  cidr_block         = "${var.vpc_cidr}"
-  name               = "${var.vpc_name}"
-  internal_subnets   = ["${var.internal_subnets}"]
-  external_subnets   = ["${var.external_subnets}"]
-  availability_zones = ["${var.availability_zones}"]
+  source                  = "modules/vpc"
+  cidr_block              = "${var.vpc_cidr}"
+  name                    = "${var.fabric_name}"
+  internal_subnets        = ["${var.internal_subnets}"]
+  external_subnets        = ["${var.external_subnets}"]
+  availability_zones      = ["${var.fabric_availability_zones}"]
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // DNS
+//
+// TODO: Modularize
 // ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_route53_zone" "main" {
   name          = "${var.domain_name}"
-  comment       = "DNS zone for internal systems"
+  comment       = "Global DNS zone for all fabric infrastructure"
   force_destroy = false
 }
 
@@ -45,6 +51,8 @@ resource "aws_route53_record" "main" {
 
 // ---------------------------------------------------------------------------------------------------------------------
 // S3 buckets for Terraform and Kops
+//
+// TODO: Modularize
 // ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_s3_bucket" "kops" {

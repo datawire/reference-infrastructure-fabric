@@ -21,7 +21,11 @@ The concept of simplicity is a subjective, but for the purpose of this architect
 
 ### Modern
 
-Similarly the term "modern" is ambiguous, but for the purpose of this architecture "modern" means that the application has a very narrow downtime constraint. We will be targetting an application that is designed for at least "four nines" of availability. Practically speaking, this means the app can be updated or modified without downtime.
+Similarly the term "modern" is ambiguous, but for the purpose of this architecture "modern" means that the application has a very narrow downtime constraint. We will be targeting an application that is designed for at least "four nines" of availability. Practically speaking, this means the app can be updated or modified without downtime.
+
+## What is an "Infrastructure Fabric"?
+
+Infrastructure Fabric is the term we use to describe the composite of a dedicated networking environment (VPC), service cluster (Kubernetes), and any strongly associated resources that are used by services in the services cluster (e.g. RDS, Elasticache, Elasticsearch). 
 
 ## Technical Design in Five Minutes
 
@@ -71,9 +75,32 @@ Here's a pretty graphical diagram of all the above information...
 
 Clone this repository into your own account or organization.
 
-### Set your Domain Name
+### Configure the Fabric name, DNS and availability zones
 
-Update the `terraform.tfvars.json` file by finding the `domain_name` key and updating it with the value of the domain name you purchased. 
+Every AWS account allocates a different set of availability zones that can be used within a region, for example, in `us-east-1` Datawire does not have access to the `us-east-1b` zone while other AWS accounts might. In order to ensure consistent deterministic runs of Terraform it is important to explicitly set the zones in the configuration.
+
+A handy script [bin/get-available-zones.sh](bin/get-available-zones.sh) is provided that returns the zone information in the correct format to be copy and pasted into `config.json`.
+
+Run:
+
+```
+# $REGION can be any of the AWS regions. 
+
+bin/get-available-zones.sh $REGION
+[
+    "us-east-2a", 
+    "us-east-2b", 
+    "us-east-2c"
+]
+```
+
+The returned JSON can be copied into `config.json` as the value of `fabric_availability_zones`. Make sure to also update the value of `fabric_region` with whatever you set `$REGION` to before running `bin/get-available-zones.sh`
+
+Before the fabric can be provisioned two variables **MUST** be configured. The first is the name of the fabric and the second is the DNS name under which the fabric will be created. 
+
+Open `config.json` and then find the `fabric_name` field and update it with an appropriate name. The name will be normalized to lowercase alphanumerics only so it is strongly recommended that you pick a name that makes sense once that is done.
+
+Also find and update the `domain_name` field with a valid domain name that is owned and available in Route 53. 
 
 ### Sanity Checking
 
@@ -88,7 +115,10 @@ The high-level steps to get the networking setup are:
 1. Terraform generates a deterministic execution plan for the infrastructure it needs to create on AWS.
 2. Terraform executes the plan and creates the necessary infrastructure.
 
-... Detail Instructions TBD ...
+Below are the detailed steps:
+
+1. Run `terraform plan -var-file=config.json -out plan.out` and ensure the program exits successfully.
+2. Run `terraform apply -var-file=config.json plan.out` and wait for Terraform to finish provisioning resources.
 
 ### Verify the AWS networking environment
 

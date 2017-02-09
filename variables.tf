@@ -1,12 +1,15 @@
 // file: variables.tf
 
-variable "domain_name" {
-  description = "the domain name"
+variable "fabric_name" {
+  description = "the name of this fabric"
 }
 
-variable "vpc_name" {
-  description = "name of the VPC"
-  default     = "cloud"
+variable "fabric_region" {
+  description = "the AWS region to provision the fabric into"
+}
+
+variable "domain_name" {
+  description = "the base domain name (e.g. example.org)"
 }
 
 variable "vpc_cidr" {
@@ -17,7 +20,7 @@ variable "vpc_cidr" {
 variable "internal_subnets" {
   type        = "list"
   description = "list of subnet CIDR blocks that are not publicly acceessibly"
-  default     = ["10.11.160.0/20", "10.11.176.0/20", "10.11.192.0/20"]
+  default     = ["10.10.160.0/20", "10.10.176.0/20", "10.10.192.0/20", "10.10.208.0/20"]
 }
 
 variable "external_subnets" {
@@ -26,8 +29,7 @@ variable "external_subnets" {
   default     = []
 }
 
-variable "availability_zones" {
+variable "fabric_availability_zones" {
   type        = "list"
   description = "a list of EC2 availability zones"
-  default     = ["us-east-2a", "us-east-2b", "us-east-2c"]
 }

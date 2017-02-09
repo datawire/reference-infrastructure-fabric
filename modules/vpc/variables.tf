@@ -12,7 +12,6 @@ variable "external_subnets" {
 variable "internal_subnets" {
   description = "List of internal subnets"
   type        = "list"
-  default     = []
 }
 
 variable "availability_zones" {
