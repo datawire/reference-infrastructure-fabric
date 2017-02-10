@@ -1,5 +1,7 @@
 # Reference Infrastructure Fabric
 
+[![Build Status](https://travis-ci.org/datawire/reference-infrastructure-fabric.svg?branch=master)](https://travis-ci.org/datawire/reference-infrastructure-fabric)
+
 Bootstrapping a microservices system is often a very difficult process for many small teams because there is a diverse ecosystem of tools that span a number of technical disciplines from operations to application development. This repository is intended for a single developer on a small team that meets all of the following criteria:
 
 1. Building a simple modern web application using a service-oriented or microservices approach.
