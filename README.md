@@ -146,7 +146,7 @@ A 4096 bit RSA public and private key pair without a passphrase will be placed i
 
 #### Invoke Kops to generate the Terraform template for Kubernetes
 
-Kops takes in a bunch of parameters and generates a Terraform template that can be used to create a new cluster. This is the command we need:
+Kops takes in a bunch of parameters and generates a Terraform template that can be used to create a new cluster. The below command only generates the Terraform template it does not affect your existing infrastructure.
 
 ```bash
 kops create cluster \
@@ -156,15 +156,24 @@ kops create cluster \
     --networking="kubenet" \
     --ssh-public-key='keys/kubernetes-admin.pub' \
     --target="terraform" \
-    --name="$(terraform output kubernetes_fqdn)"
+    --name="$(terraform output kubernetes_fqdn)" \
+    --out=kubernetes
 ```
 
 #### Plan and Apply the Kubernetes cluster with Terraform
 
 Below are the detailed steps:
 
-1. Run `terraform plan -out kubernetes/plan.out kubernetes/` and ensure the program exits successfully.
-2. Run `terraform apply kubernetes/plan.out` and wait for Terraform to finish provisioning resources.
+1. Run `terraform plan -state=kubernetes/terraform.tfstate -out kubernetes/plan.out kubernetes/` and ensure the program exits successfully.
+2. Run `terraform apply -state=kubernetes/terraform.tfstate kubernetes/plan.out` and wait for Terraform to finish provisioning resources.
+
+#### Push the Kubernetes Terraform state upto S3
+
+TBD
+
+#### Wait for the Kubernetes cluster to form
+
+The Kubernetes cluster provisions asynchronously so even though Terraform exited almost immediately it's not likely that the cluster itself is running. To determine if the cluster is up you need to poll the API server. The script `bin/wait_up.py` provides a simple one line solution for this problem.
 
 ## Next Steps
 
