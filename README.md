@@ -122,15 +122,49 @@ Below are the detailed steps:
 
 ### Verify the AWS networking environment
 
-### Generate the Kubernetes cluster configuration
+TBD
 
 ### Generate the Kubernetes cluster
 
 The high-level steps to get the Kubernetes cluster setup are:
 
-1. Update the `kops` tool cluster specification files so Kops can generate Terraform configs to provision in the newly created VPC.
-2. Generate the Terraform module for the new Kubernetes cluster.
-3. Apply the generated Terraform configuration for the Kubernetes cluster.
+1. Ensure a public-private SSH key pair is generated for the cluster.
+2. Invoke the `kops` too with some parameters that are output from the networking environment deployment.
+3. Terraform generates a deterministic execution plan for the infrastructure it needs to create on AWS for the Kubernetes cluster.
+4. Terraform executes the plan and creates the necessary infrastructure.
+5. Wait for the Kubernetes cluster to deploy.
+
+#### SSH public/private key pair
+
+It is extremely unlikely you will need to SSH into the Kubernetes nodes, however, it's a good best practice to use a known or freshly-generated SSH key rather than relying on any tool or service to generate one. To generate a new key pair run the following command:
+
+`ssh-keygen -t rsa -b 4096 -N '' -C "kubernetes-admin" -f "keys/kubernetes-admin"`
+
+A 4096 bit RSA public and private key pair without a passphrase will be placed into the [/keys](/keys) directory. Move the private key out of this directory immediately after creation with the following command:
+
+`mv keys/kubernetes-admin ~/.ssh/kubernetes-admin`
+
+#### Invoke Kops to generate the Terraform template for Kubernetes
+
+Kops takes in a bunch of parameters and generates a Terraform template that can be used to create a new cluster. This is the command we need:
+
+```bash
+kops create cluster \
+    --zones="$(terraform output main_network_availability_zones_csv | tr -d '\n')" \
+    --vpc="$(terraform output main_network_id | tr -d '\n')" \
+    --network-cidr="$(terraform output main_network_cidr_block | tr -d '\n')" \
+    --networking="kubenet" \
+    --ssh-public-key='keys/kubernetes-admin.pub' \
+    --target="terraform" \
+    --name="$(terraform output kubernetes_fqdn)"
+```
+
+#### Plan and Apply the Kubernetes cluster with Terraform
+
+Below are the detailed steps:
+
+1. Run `terraform plan -out kubernetes/plan.out kubernetes/` and ensure the program exits successfully.
+2. Run `terraform apply kubernetes/plan.out` and wait for Terraform to finish provisioning resources.
 
 ## Next Steps
 
