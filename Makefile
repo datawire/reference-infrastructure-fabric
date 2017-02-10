@@ -1,9 +1,9 @@
 # Makefile
 
-.PHONY: apply plan sanity-check
+.PHONY: apply plan sanity-check test-setup test
 
 plan:
-    terraform get --update=true
+	terraform get --update=true
 	terraform plan --var-file=config.json --out plan.out
 
 apply:
@@ -11,6 +11,12 @@ apply:
 
 sanity-check: venv
 	venv/bin/python bin/sanity_check.py
+
+test-setup:
+	test/setup.sh
+
+test:
+	test/test_terraform_validate.py
 
 # Python virtualenv automatic setup. Ensures that targets relying on the virtualenv always have an updated python to
 # use.

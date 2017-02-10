@@ -1,0 +1,16 @@
+---
+dist: trusty
+language: generic
+sudo: false
+
+cache:
+  pip: true
+  directories:
+  - "${HOME}/bin"
+
+before_install:
+- export PATH=$PATH:$HOME/bin
+- bin/setup.sh
+
+script:
+- make test
