@@ -126,6 +126,21 @@ Below are the detailed steps:
 
 TBD
 
+### Push Terraform state into AWS S3
+
+Terraform operates like a thermostat which means that it reconciles the desired world (`*.tf` files) with the provisioned world by computing a difference between a state file and the provisioned infrastructure. The provisioned resources are tracked in the system state file which maps actual system identifiers to resources described in the configuration templates users define (e.g. `vpc-abcxyz -> aws_vpc.kubernetes`). When Terraform detects a difference from the state file then it creates or updates the resource where possible (some things are immutable and cannot just be changed on-demand).
+
+Terraform does not care where the state file is located so in theory it can be left on your local workstation, but a better option that encourages sharing and reuse is to push the file into Amazon S3 which Terraform natively knows how to handle.
+
+To start we need to enable Terraform's remote state capabilities. Run the following command to begin:
+
+```bash
+terraform remote config \
+  -backend=s3 \
+  -backend-config="bucket=$(terraform output terraform_state_store_bucket | tr -d '\n')" \
+  -backend-config="key=$(terraform output kubernetes_fqdn | tr -d '\n').tfstate" \
+```
+
 ### Generate the Kubernetes cluster
 
 The high-level steps to get the Kubernetes cluster setup are:
