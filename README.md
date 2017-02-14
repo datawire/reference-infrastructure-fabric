@@ -10,7 +10,7 @@ Bootstrapping a microservices system is often a very difficult process for many 
 
 3. Limited operations experience or budget and wants to "get going quickly" but with a reasonably architected foundation that will not cause major headaches two weeks down the road because the foundation "was just a toy".
 
-If all the above criteria match then this project is for you and you should keep reading!
+If all the above criteria match then this project is for you and you should keep reading because this guide will help you get setup with a production-quality Kubernetes cluster on AWS in about 10 to 15 minutes!
 
 ## What do you mean by "simple modern web application"?
 
@@ -19,7 +19,7 @@ If all the above criteria match then this project is for you and you should keep
 The concept of simplicity is a subjective, but for the purpose of this architecture "simple" means that the application conforms to two constraints:
 
 1. Business logic, for example, a REST API is containerized and run on the Kubernetes cluster.
-2. Persistence is offloaded into an external system.
+2. Persistence is offloaded to an external service (e.g. Amazon RDS).
 
 ### Modern
 
@@ -27,7 +27,7 @@ Similarly the term "modern" is ambiguous, but for the purpose of this architectu
 
 ## What is an "Infrastructure Fabric"?
 
-Infrastructure Fabric is the term we use to describe the composite of a dedicated networking environment (VPC), service cluster (Kubernetes), and any strongly associated resources that are used by services in the services cluster (e.g. RDS, Elasticache, Elasticsearch). 
+Infrastructure fabric is the term we use to describe the composite of a dedicated networking environment (VPC), service cluster (Kubernetes), and any strongly associated resources that are used by services in the services cluster (e.g. RDS, Elasticache, Elasticsearch). 
 
 ## Technical Design in Five Minutes
 
@@ -47,8 +47,6 @@ The deployed network fabric will not have an external vs. internal subnet distin
 
 ### DNS
 
-**NOTE:** Explore creative ways to make this not suck.
-
 Before the Kubernetes cluster can be provisioned a public DNS record in AWS Route 53 needs to exist, for example, at [Datawire](https://datawire.io) we own the mysterious `k736.net`. It is **strongly** recommended that you buy a domain name for this part of your infrastructure and do not use an existing one.
 
 ### Kubernetes
@@ -63,15 +61,20 @@ Here's a pretty graphical diagram of all the above information...
 
 ### Prerequisites
 
-1. You need an active AWS account and a AWS API credentials. Please read our five-minute [AWS Bootstrapping](docs/aws_bootstrap.md) guide if you do not have an AWS account or AWS API credentials.
+**NOTE:** You really need all three of these tools. A future guide will simplify the requirements to get setup but we want this to be a fairly vanilla introduction to using Kubernetes with AWS.
 
-2. You need to install the following third-party tools. You can perform this manually or run `bin/setup-required-tools`:
+1. An active AWS account and a AWS API credentials. Please read our five-minute [AWS Bootstrapping](docs/aws_bootstrap.md) guide if you do not have an AWS account or AWS API credentials.
 
-| Tool                              | Description                           |
-| --------------------------------- | ------------------------------------- |
-| [Terraform](https://terraform.io) | Infrastructure provisioning tool. | 
-| [Kubectl](https://example.org)    | Kubernetes CLI |
-| [kops](https://example.org)       | Kubernetes Ops ("kops") |
+2. Install the following third-party tools.
+
+| Tool                                                                       | Description                          |
+| ---------------------------------------------------------------------------| ------------------------------------ |
+| [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) | AWS command line interface           |
+| [Terraform](https://terraform.io)                                          | Infrastructure provisioning tool     | 
+| [Kubectl](https://kubernetes.io/docs/user-guide/prereqs/)                  | Kubernetes command line interface    |
+| [kops](https://github.com/kubernetes/kops/releases)                        | Kubernetes cluster provisioning tool |
+
+3. A domain name and hosted DNS zone in Route 53 that you can dedicate to the fabric, for example at [Datawire.io](https://datawire.io) we use `k736.net` which is meaningless outside of the company. This domain name will have several subdomains attached to it by the time you finish this guide. To get setup with Route 53 see the [Route53 Bootstrapping](docs/route53_bootstrap.md) guide.
 
 ### Clone Repository
 
@@ -190,11 +193,17 @@ TBD
 
 #### Wait for the Kubernetes cluster to form
 
-The Kubernetes cluster provisions asynchronously so even though Terraform exited almost immediately it's not likely that the cluster itself is running. To determine if the cluster is up you need to poll the API server. The script `bin/wait_up.py` provides a simple one line solution for this problem.
+The Kubernetes cluster provisions asynchronously so even though Terraform exited almost immediately it's not likely that the cluster itself is running. To determine if the cluster is up you need to poll the API server. The script `bin/wait_up.py` provides a simple one line solution for this problem. 
 
 ## Next Steps
 
-Check out Datawire's Reference Application - Snackchat! 
+### Add an RDS PostgreSQL database into the Fabric and access it from Kubernetes!
+
+Coming Soon!
+
+### Check out Datawire's Reference Application - Snackchat! 
+
+Coming Soon!
 
 ## License
 
