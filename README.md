@@ -39,6 +39,8 @@ To keep this infrastructure fabric simple, but also robust we are going to make 
 
 The GitHub repository is setup so that each fabric is defined in an independent Git branch. This allows for multiple fabrics to exist in parallel and for concurrent modification of the fabrics. Why might you want multiple fabrics? A couple reasons, it allows multiple environments (e.g. develop, test, staging, prod) and it enables other types of useful separation, for example, Alice and Bob can have their own cloud-deployed fabrics for whatever purpose they need.
 
+Fabrics are named 
+
 ### Base Network (VPC)
 
 A single new Virtual Private Cloud ("VPC") will be created in a single region (us-east-2 "Ohio") that holds the Kubernetes cluster along with all long-lived systems (e.g. databases). A VPC is a namespace for networking. It provides strong network-level isolation from other "stuff" running in an AWS account. It's a good idea to create a separate VPC rather than relying on the default AWS VPC because over time the default VPC becomes cluttered and hard to maintain or keep configured properly with other systems and VPC's are a cost-free abstraction in AWS. The base network will be IPv4 because Kubernetes does not run on IPv6 networks yet.
@@ -61,7 +63,7 @@ A Kubernetes cluster is setup in the newly created VPC and setup with a master n
 
 ### Prerequisites
 
-**NOTE:** You really need all three of these tools. A future guide will simplify the requirements to get setup but we want this to be a fairly vanilla introduction to using Kubernetes with AWS.
+**NOTE:** You really need all three of these tools. A future guide will simplify the requirements to get setup but we want this to be as vanilla an introduction as possible to using Kubernetes with AWS.
 
 1. An active AWS account and a AWS API credentials. Please read our five-minute [AWS Bootstrapping](docs/aws_bootstrap.md) guide if you do not have an AWS account or AWS API credentials.
 
@@ -80,7 +82,13 @@ A Kubernetes cluster is setup in the newly created VPC and setup with a master n
 
 ### Clone Repository
 
-Clone this repository into your own account or organization.
+Clone this repository into your own account or organization. The cloned repository contains two branches `master` and `fabric/example`. The `master` branch contains documentation and some specialized scripts for bootstrapping AWS and additional fabrics. The `fabric/example` branch is an example repository that is nearly entirely ready for use.
+
+### Bootstrapping AWS
+
+Before we begin a couple things need to be done on the AWS account.
+
+1. Get an AWS IAM user and API credentials. 
 
 ### Configure the Fabric name, DNS and availability zones
 
