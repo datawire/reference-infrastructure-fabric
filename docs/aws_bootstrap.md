@@ -61,6 +61,7 @@ If you want to create a brand new user for AWS then start from [Brand New Accoun
 6. Ensure the following facts are correct on the next screen.
 
   | Field | Value |
+  | ----- | ----- |
   | Permission summary | Managed Policy -> AdministratorAccess |
 
 7. Select "Add permissions".
