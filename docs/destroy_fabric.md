@@ -1,6 +1,6 @@
 # Destroy a Fabric
 
-Tearing down a Fabric is very easy and is two steps:
+Destroying a Fabric is very easy and is two steps:
 
 1. Terminate the Kubernetes cluster.
 2. Terminate any provisioned infrastructure and the underlying network.
@@ -22,9 +22,10 @@ Each instructions assumes you're starting from the root directory of the reposit
     terraform plan -var-file=../config.json -destroy -out plan-destroy.out
     terraform apply plan-destroy.out
  
-    kops delete cluster --yes \
-      --name=$(CLUSTER_NAME)
+    kops delete cluster --yes --name=$(CLUSTER_NAME)
     ````
+    
+    When all of these commands are completed then the Kubernetes cluster will be either completely shutdown or in a state of shutting down (EC2 instance shutdown is asynchronous). If you only want to teardown the Kubernetes cluster and not the rest of the fabric then **DO NOT RUN THE NEXT STEP**!
 
 2. Teardown the infrastructure fabric:
     

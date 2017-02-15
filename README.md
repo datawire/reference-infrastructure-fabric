@@ -37,7 +37,7 @@ To keep this infrastructure fabric simple, but also robust we are going to make 
 
 ### Repository Structure
 
-The GitHub repository is setup so that each fabric is defined in an independent Git branch. This allows for multiple fabrics to exist in parallel and for concurrent modification of these fabrics. Why might you want multiple fabrics? A couple reasons, it allows multiple fabric environments (e.g. develop, test, staging, prod) and it also enables other types of useful separation, for example, Alice and Bob can have their own cloud-deployed fabrics for whatever purpose they need.
+The GitHub repository is setup so that each fabric is defined in an independent Git branch. This allows for multiple fabrics to exist in parallel and for concurrent modification of the fabrics. Why might you want multiple fabrics? A couple reasons, it allows multiple environments (e.g. develop, test, staging, prod) and it enables other types of useful separation, for example, Alice and Bob can have their own cloud-deployed fabrics for whatever purpose they need.
 
 ### Base Network (VPC)
 
@@ -70,9 +70,11 @@ A Kubernetes cluster is setup in the newly created VPC and setup with a master n
 | Tool                                                                       | Description                          |
 | ---------------------------------------------------------------------------| ------------------------------------ |
 | [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) | AWS command line interface           |
+| `bash`                                                                     | Popular shell on *Nix. So popular you probably already have it ;) |
 | [Terraform](https://terraform.io)                                          | Infrastructure provisioning tool     | 
 | [Kubectl](https://kubernetes.io/docs/user-guide/prereqs/)                  | Kubernetes command line interface    |
 | [kops](https://github.com/kubernetes/kops/releases)                        | Kubernetes cluster provisioning tool |
+| Python >= 3.4                                                              | Popular scripting language. Python is used for some utility scripts in [bin/](bin/) |
 
 3. A domain name and hosted DNS zone in Route 53 that you can dedicate to the fabric, for example at [Datawire.io](https://datawire.io) we use `k736.net` which is meaningless outside of the company. This domain name will have several subdomains attached to it by the time you finish this guide. To get setup with Route 53 see the [Route53 Bootstrapping](docs/route53_bootstrap.md) guide.
 
@@ -223,6 +225,10 @@ Coming Soon!
 **A:** Why did you write this guide?
 
 **Q:** We use this guide to run Kubernetes clusters at Datawire.io and we thought it was useful information that other developers would find useful!
+
+**A:** How do I delete a fabric?
+
+**Q:** Check out the [Tearing down a Fabric document](docs/destroy_fabric.md). It's very straightforward.
 
 ## License
 
