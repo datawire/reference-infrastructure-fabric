@@ -24,14 +24,16 @@ If you have the domain under Route53 control either because it already existed o
 {
   "domain_name": "example.org",
 
-  ... additional JSON ...
+  "another_key_0": null,
+  "another_key_1": null
 }
 ```
 
 ## FAQ
 
 **Q:** Can I use a subdomain of an existing domain as the base domain (e.g. `k8s.example.org` would yield `api.foobar.k8s.example.org`)?
+
 **A:** Yes, but it's beyond the scope of this guide. An outline of the process is:
 
   1. Create another hosted zone in Route53 for the subdomain (e.g. `k8s.example.org`)
-  2. Create a new NS record on the "parent" zone `example.org` and add the nameservers for `k8s.example.org` into this record.
+  2. Create a new NS record on the "parent" zone `example.org` and add the name servers for `k8s.example.org` into this record.
