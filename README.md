@@ -27,7 +27,7 @@ Similarly the term "modern" is ambiguous, but for the purpose of this architectu
 
 ## What is an "Infrastructure Fabric"?
 
-Infrastructure fabric is the term we use to describe the composite of a dedicated networking environment (VPC), service cluster (Kubernetes), and any strongly associated resources that are used by services in the services cluster (e.g. RDS, Elasticache, Elasticsearch). 
+Infrastructure fabric is the term we use to describe the composite of a dedicated networking environment (VPC), container cluster (Kubernetes), and any strongly associated resources that are used by services in the container cluster (e.g. RDS, Elasticache, Elasticsearch). 
 
 ## Technical Design in Five Minutes
 
@@ -35,9 +35,13 @@ Infrastructure fabric is the term we use to describe the composite of a dedicate
 
 To keep this infrastructure fabric simple, but also robust we are going to make some opinionated design decisions.
 
+### Repository Structure
+
+The GitHub repository is setup so that each fabric is defined in an independent Git branch. This allows for multiple fabrics to exist in parallel and for concurrent modification of these fabrics. Why might you want multiple fabrics? A couple reasons, it allows multiple fabric environments (e.g. develop, test, staging, prod) and it also enables other types of useful separation, for example, Alice and Bob can have their own cloud-deployed fabrics for whatever purpose they need.
+
 ### Base Network (VPC)
 
-A single new Virtual Private Cloud ("VPC") will be created in a single region (us-east-2 "Ohio") that holds the Kubernetes cluster along with all long-lived systems (e.g. databases). A VPC is a namespace for networking. It provides strong network-level isolation from other "stuff" running in an AWS account. It's a good idea to create a separate VPC rather than relying on the default AWS VPC because over time the default VPC becomes cluttered and hard to maintain or keep configured properly with other systems and VPC's are a cost-free abstraction in AWS.
+A single new Virtual Private Cloud ("VPC") will be created in a single region (us-east-2 "Ohio") that holds the Kubernetes cluster along with all long-lived systems (e.g. databases). A VPC is a namespace for networking. It provides strong network-level isolation from other "stuff" running in an AWS account. It's a good idea to create a separate VPC rather than relying on the default AWS VPC because over time the default VPC becomes cluttered and hard to maintain or keep configured properly with other systems and VPC's are a cost-free abstraction in AWS. The base network will be IPv4 because Kubernetes does not run on IPv6 networks yet.
 
 ### Subnets
 
@@ -51,11 +55,7 @@ Before the Kubernetes cluster can be provisioned a public DNS record in AWS Rout
 
 ### Kubernetes
 
-A Kubernetes cluster will be installed into the newly created VPC and setup with a single master node and several worker nodes spanning three availability zones. Despite the single master node this is still a HA setup because the worker nodes which actually run Kubernetes pods are spread across several availability zones. In the rare but potential situation where the master node fails the Kubernetes system will continue to be available until the master is automatically replaced (the mechanics of this are documented in [docs/high_availability.md](docs/high_availability.md).
-
-### Diagram
-
-Here's a pretty graphical diagram of all the above information...
+A Kubernetes cluster is setup in the newly created VPC and setup with a master node per availability zone and then the worker nodes (**FYI**: sometimes called "kubelets" or "minions" on the internet because of historical reasons) are created across the availability zones as well. This design provides a high availability ("HA") cluster.
 
 ## Getting Started
 
@@ -217,6 +217,12 @@ Coming Soon!
 ### Check out Datawire's Reference Application - Snackchat! 
 
 Coming Soon!
+
+## FAQ
+
+**A:** Why did you write this guide?
+
+**Q:** We use this guide to run Kubernetes clusters at Datawire.io and we thought it was useful information that other developers would find useful!
 
 ## License
 
