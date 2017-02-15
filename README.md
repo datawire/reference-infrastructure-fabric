@@ -195,6 +195,19 @@ TBD
 
 The Kubernetes cluster provisions asynchronously so even though Terraform exited almost immediately it's not likely that the cluster itself is running. To determine if the cluster is up you need to poll the API server. The script `bin/wait_up.py` provides a simple one line solution for this problem. 
 
+## How much will this cost?
+
+AWS is not free and so running this setup will incur some amount of monthly operational expense for you or your organization. The below table summarizes the expenses but **USER BEWARE** Datawire does not take any responsibility for the accuracy of these numbers. Also keep in mind your AWS bill will vary based on things such as bandwidth consumed and other AWS resources that you provision such as Amazon RDS instances.
+
+### How can I make this cheaper?
+
+There are really only straight forward strategies:
+
+1. Use smaller EC2 instance sizes for the Kubernetes masters and nodes.
+2. Purchase EC2 reserved instances for the types of nodes you know you need.
+
+Other options exist such as EC2 spot instances or refactoring your application to be less resource intensive but those topics are outside the scope of this guide.
+
 ## Next Steps
 
 ### Add an RDS PostgreSQL database into the Fabric and access it from Kubernetes!
