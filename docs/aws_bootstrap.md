@@ -84,6 +84,7 @@ The easiest way to get and use the `aws` command is to install it into the user'
 Run `aws configure` and input the following for the prompted values
 
 | Prompt | Input Value |
+| ------ | ----------- |
 | AWS Access Key ID | The AWS Access Key ID from [Setup an AWS user and API access](#setup-an-aws-user-and-api-access) |
 | AWS Secret Access Key | The AWS Secret Access Key from [Setup an AWS user and API access](#setup-an-aws-user-and-api-access) |
 | Default Region Name | us-east-2 |
