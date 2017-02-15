@@ -14,7 +14,7 @@ There are a number of ways to get a domain on Route53 and it's outside of the sc
 
 1. [Purchase an unowned domain](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar.html)
 2. [Transfer an existing domain you own from a different registrar to Route53](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-to-route-53.html)
-3. [Use a domain already in Route53](#Configuring the Domain)
+3. [Use a domain already in Route53](#Configuring-the-Domain)
 
 ## Configuring the Domain
 
