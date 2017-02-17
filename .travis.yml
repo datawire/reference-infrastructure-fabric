@@ -10,7 +10,7 @@ cache:
 
 before_install:
 - export PATH=$PATH:$HOME/bin
-- test/setup.sh
+- make test-setup
 
 script:
 - make test
