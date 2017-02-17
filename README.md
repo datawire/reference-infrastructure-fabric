@@ -68,28 +68,41 @@ Before we begin a couple things need to be done on the AWS account.
 
 Every AWS account allocates a different set of availability zones that can be used within a region, for example, in `us-east-1` Datawire does not have access to the `us-east-1b` zone while other AWS accounts might. In order to ensure consistent deterministic runs of Terraform it is important to explicitly set the zones in the configuration.
 
-A handy script [bin/get-available-zones.sh](bin/get-available-zones.sh) is provided that returns the zone information in the correct format to be copy and pasted into `config.json`.
+For this guide we're going to assume `us-east-2` is your preferred deployment region.
 
-Run:
+A useful script [bin/get-available-zones.sh](bin/configure_availability_zones.py) is provided that will automatically update [config.json](config.json) with appropriate values. Run the script as follows `bin/configure_availability_zones.py us-east-2`.
+
+Afte a moment you should see the following message:
 
 ```
-# $REGION can be any of the AWS regions. 
-
-bin/get-available-zones.sh $REGION
-[
-    "us-east-2a", 
-    "us-east-2b", 
-    "us-east-2c"
-]
+Updating config.json...
+    Region             = us-west-2
+    Availability Zones = ['us-west-2a', 'us-west-2b', 'us-west-2c']
+    
+Done!
 ```
 
-The returned JSON can be copied into `config.json` as the value of `fabric_availability_zones`. Make sure to also update the value of `fabric_region` with whatever you set `$REGION` to before running `bin/get-available-zones.sh`
+You can confirm the operation was a success by comparing the above with the values in `config.json`:
 
-Before the fabric can be provisioned two variables **MUST** be configured. The first is the name of the fabric and the second is the DNS name under which the fabric will be created. 
+```
+cat config.json
+{
+    "domain_name": "${YOUR_DOMAIN_HERE}",
+    "fabric_availability_zones": [
+        "us-east-2a",
+        "us-east-2b",
+        "us-east-2c"
+    ],
+    "fabric_name": "example",
+    "fabric_region": "us-east-2"
+}
+```
+
+Two other variables must be configured in `config.json` before the fabric can be provisioned. The first is the name of the fabric and the second is the DNS name under which the fabric will be created. 
 
 Open `config.json` and then find the `fabric_name` field and update it with an appropriate name. The name will be normalized to lowercase alphanumerics only so it is strongly recommended that you pick a name that makes sense once that is done.
 
-Also find and update the `domain_name` field with a valid domain name that is owned and available in Route 53. 
+Also find and update the `domain_name` field with a valid domain name that is owned and available in Amazon Route53. 
 
 ### Sanity Checking
 
