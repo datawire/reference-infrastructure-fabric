@@ -62,9 +62,15 @@ Clone this repository into your own account or organization. The cloned reposito
 
 Before we begin a couple things need to be done on the AWS account.
 
-1. Get an AWS IAM user and API credentials. 
+1. Get an AWS IAM user and API credentials
 
-### Configure the Fabric name, DNS and availability zones
+  Follow [Bootstrapping AWS](docs/aws_bootstrap.md) for instructions on setting up an AWS user or skip this step if you already have a user setup.
+
+2. Get a domain name for use with the fabric
+
+  Follow [Bootstrapping Route53](docs/route53_bootstrap.md) for instructions on setting up Route53 properly or skip this step if you already have a domain setup.
+
+### Configure the Fabric name, DNS, region and availability zones
 
 Every AWS account allocates a different set of availability zones that can be used within a region, for example, in `us-east-1` Datawire does not have access to the `us-east-1b` zone while other AWS accounts might. In order to ensure consistent deterministic runs of Terraform it is important to explicitly set the zones in the configuration.
 
@@ -72,7 +78,7 @@ For this guide we're going to assume `us-east-2` is your preferred deployment re
 
 A useful script [bin/get-available-zones.sh](bin/configure_availability_zones.py) is provided that will automatically update [config.json](config.json) with appropriate values. Run the script as follows `bin/configure_availability_zones.py us-east-2`.
 
-Afte a moment you should see the following message:
+After a moment you should see the following message:
 
 ```
 Updating config.json...
@@ -104,11 +110,27 @@ Open `config.json` and then find the `fabric_name` field and update it with an a
 
 Also find and update the `domain_name` field with a valid domain name that is owned and available in Amazon Route53. 
 
-### Sanity Checking
+### Create S3 bucket for Terraform and Kubernetes state storage
 
-Automated sanity checking of both your local developer setup and your AWS account can be performed by running `bin/check_sanity` before continuing any further.
+Terraform operates like a thermostat which means that it reconciles the desired world (`*.tf` templates) with the provisioned world by computing a difference between a state file and the provisioned infrastructure. The provisioned resources are tracked in the system state file which maps actual system identifiers to resources described in the configuration templates users define (e.g. `vpc-abcxyz -> aws_vpc.kubernetes`). When Terraform detects a difference from the state file then it creates or updates the resource where possible (some things are immutable and cannot just be changed on-demand).
 
-To run the sanity checker run the following command: `make sanity`. The sanity checker offers useful actionable feedback if it finds issues.
+Terraform does not care where the state file is located so in theory it can be left on your local workstation, but a better option that encourages sharing and reuse is to push the file into Amazon S3 which Terraform natively knows how to handle.
+
+Run the command:
+
+`bin/setup_state_store.py`
+
+If the operation is successful it will return the name of the S3 bucket which is the value of `config.json["domain_name"]` with `-state` appended and all nonalphanumeric characters replaced with `-` (dash) character. For example:
+
+```
+cat config.json
+{
+    "domain_name": "k736.net"
+}
+
+bin/setup_state_store.py
+Bucket: k736-net-state
+```
 
 ### Generate the AWS networking environment
 
@@ -119,27 +141,19 @@ The high-level steps to get the networking setup are:
 
 Below are the detailed steps:
 
-1. Run `terraform plan -var-file=config.json -out plan.out` and ensure the program exits successfully.
-2. Run `terraform apply -var-file=config.json plan.out` and wait for Terraform to finish provisioning resources.
+1. Configure Terraform to talk to the remote state store:
 
-### Verify the AWS networking environment
-
-TBD
-
-### Push Terraform state into AWS S3
-
-Terraform operates like a thermostat which means that it reconciles the desired world (`*.tf` files) with the provisioned world by computing a difference between a state file and the provisioned infrastructure. The provisioned resources are tracked in the system state file which maps actual system identifiers to resources described in the configuration templates users define (e.g. `vpc-abcxyz -> aws_vpc.kubernetes`). When Terraform detects a difference from the state file then it creates or updates the resource where possible (some things are immutable and cannot just be changed on-demand).
-
-Terraform does not care where the state file is located so in theory it can be left on your local workstation, but a better option that encourages sharing and reuse is to push the file into Amazon S3 which Terraform natively knows how to handle.
-
-To start we need to enable Terraform's remote state capabilities. Run the following command to begin:
-
-```bash
-terraform remote config \
+  ```bash
+  terraform remote config \
   -backend=s3 \
-  -backend-config="bucket=$(terraform output terraform_state_store_bucket | tr -d '\n')" \
-  -backend-config="key=$(terraform output kubernetes_fqdn | tr -d '\n').tfstate" \
-```
+  -backend-config="bucket=$(bin/get_state_store_name.py)" \
+  -backend-config="key=$(bin/get_fabric_name.py).tfstate"
+  ```
+
+2. Run `terraform get -update=true`
+
+3. Run `terraform plan -var-file=config.json -out plan.out` and ensure the program exits successfully.
+4. Run `terraform apply -var-file=config.json plan.out` and wait for Terraform to finish provisioning resources.
 
 ### Generate the Kubernetes cluster
 
@@ -153,7 +167,7 @@ The high-level steps to get the Kubernetes cluster setup are:
 
 #### SSH public/private key pair
 
-It is extremely unlikely you will need to SSH into the Kubernetes nodes, however, it's a good best practice to use a known or freshly-generated SSH key rather than relying on any tool or service to generate one. To generate a new key pair run the following command:
+It is extremely unlikely you will need to SSH into the Kubernetes nodes, however, it is a good best practice to use a known or freshly-generated SSH key rather than relying on any tool or service to generate one. To generate a new key pair run the following command:
 
 `ssh-keygen -t rsa -b 4096 -N '' -C "kubernetes-admin" -f "keys/kubernetes-admin"`
 
@@ -181,20 +195,24 @@ kops create cluster \
 
 Below are the detailed steps:
 
-1. Run `terraform plan -state=kubernetes/terraform.tfstate -out kubernetes/plan.out kubernetes/` and ensure the program exits successfully.
-2. Run `terraform apply -state=kubernetes/terraform.tfstate kubernetes/plan.out` and wait for Terraform to finish provisioning resources.
+1. Run `cd kubernetes/`
 
-#### Push the Kubernetes Terraform state upto S3
+2. Configure Terraform to talk to the remote state store:
 
-TBD
+  ```bash
+  terraform remote config \
+  -backend=s3 \
+  -backend-config="bucket=$(bin/get_state_store_name.py)" \
+  -backend-config="key=$(bin/get_fabric_name.py)-kubernetes.tfstate"
+  ```
+
+3. Run `terraform get -update=true`
+4. Run `terraform plan plan.out` and ensure the program exits successfully.
+5. Run `terraform apply plan.out` and wait for Terraform to finish provisioning resources.
 
 #### Wait for the Kubernetes cluster to form
 
 The Kubernetes cluster provisions asynchronously so even though Terraform exited almost immediately it's not likely that the cluster itself is running. To determine if the cluster is up you need to poll the API server. The script `bin/wait_up.py` provides a simple one line solution for this problem. 
-
-## How much will this cost?
-
-AWS is not free and so running this setup will incur some amount of monthly operational expense for you or your organization. The below table summarizes the expenses but **USER BEWARE** Datawire does not take any responsibility for the accuracy of these numbers. Also keep in mind your AWS bill will vary based on things such as bandwidth consumed and other AWS resources that you provision such as Amazon RDS instances.
 
 ### How can I make this cheaper?
 
