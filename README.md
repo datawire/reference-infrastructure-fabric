@@ -76,8 +76,8 @@ Afte a moment you should see the following message:
 
 ```
 Updating config.json...
-    Region             = us-west-2
-    Availability Zones = ['us-west-2a', 'us-west-2b', 'us-west-2c']
+    Region             = us-east-2
+    Availability Zones = ['us-east-2a', 'us-east-2b', 'us-east-2c']
     
 Done!
 ```
