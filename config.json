@@ -1,13 +1,6 @@
 {
-  "domain_name": "k736.net",
-
-  "fabric_availability_zones": [
-    "us-east-1c",
-    "us-east-1d",
-    "us-east-1e"
-  ],
-
-  "fabric_name": "sandbox",
-
-  "fabric_region": "us-east-1"
+  "domain_name": "${YOUR_DOMAIN_HERE}",
+  "fabric_availability_zones": [],
+  "fabric_name": "example",
+  "fabric_region": "us-east-2"
 }
