@@ -58,6 +58,16 @@ Check out the [high-level design document](docs/tech_design_high_level.md) for a
 
 Clone this repository into your own account or organization. The cloned repository contains two branches `master` and `fabric/example`. The `master` branch contains documentation and some specialized scripts for bootstrapping AWS and additional fabrics. The `fabric/example` branch is an example repository that is nearly entirely ready for use.
 
+### Checkout the example branch then overlay the master branch tools onto it
+
+The repository is setup as a monorepo that uses branches to keep environment definitions independent. Run the following commands to get where you want to be:
+
+1. `git pull`
+2. `git checkout fabric/example`
+3. `git checkout master -- bin/*`
+
+After running those commands you should be in the `example/fabric` branch and the tools from the [bin/](bin/) directory on the `master` branch will be available for use.
+
 ### Bootstrapping AWS
 
 Before we begin a couple things need to be done on the AWS account.
@@ -76,7 +86,7 @@ Every AWS account allocates a different set of availability zones that can be us
 
 For this guide we're going to assume `us-east-2` is your preferred deployment region.
 
-A useful script [bin/get-available-zones.sh](bin/configure_availability_zones.py) is provided that will automatically update [config.json](config.json) with appropriate values. Run the script as follows `bin/configure_availability_zones.py us-east-2`.
+A useful script [bin/configure_availability_zones.py](bin/configure_availability_zones.py) is provided that will automatically update [config.json](config.json) with appropriate values. Run the script as follows `bin/configure_availability_zones.py us-east-2`.
 
 After a moment you should see the following message:
 
@@ -106,9 +116,9 @@ cat config.json
 
 Two other variables must be configured in `config.json` before the fabric can be provisioned. The first is the name of the fabric and the second is the DNS name under which the fabric will be created. 
 
-Open `config.json` and then find the `fabric_name` field and update it with an appropriate name. The name will be normalized to lowercase alphanumerics only so it is strongly recommended that you pick a name that makes sense once that is done.
+Open `config.json` and then find the `fabric_name` field and update it with an appropriate name. The name will be normalized to lowercase alphanumeric characters only so it is strongly recommended that you pick a name that makes sense once that is done.
 
-Also find and update the `domain_name` field with a valid domain name that is owned and available in Amazon Route53. 
+Also find and update the `domain_name` field with a valid domain name that is owned and available in Amazon Route53.
 
 ### Create S3 bucket for Terraform and Kubernetes state storage
 
@@ -175,6 +185,10 @@ A 4096 bit RSA public and private key pair without a passphrase will be placed i
 
 `mv keys/kubernetes-admin ~/.ssh/kubernetes-admin`
 
+Ensure you the private key is read/write only by your user as well:
+
+`chmod 600 ~/.ssh/kubernetes-admin`
+
 #### Invoke Kops to generate the Terraform template for Kubernetes
 
 Kops takes in a bunch of parameters and generates a Terraform template that can be used to create a new cluster. The below command only generates the Terraform template it does not affect your existing infrastructure.
@@ -212,7 +226,7 @@ Below are the detailed steps:
 
 #### Wait for the Kubernetes cluster to form
 
-The Kubernetes cluster provisions asynchronously so even though Terraform exited almost immediately it's not likely that the cluster itself is running. To determine if the cluster is up you need to poll the API server. The script `bin/wait_up.py` provides a simple one line solution for this problem. 
+The Kubernetes cluster provisions asynchronously so even though Terraform exited almost immediately it's not likely that the cluster itself is running. To determine if the cluster is up you need to poll the API server. You can do this by running `kubectl cluster-info` which will eventually return the API server address.
 
 ### How can I make this cheaper?
 
