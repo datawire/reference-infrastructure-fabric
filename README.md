@@ -64,7 +64,7 @@ The repository is setup as a monorepo that uses branches to keep environment def
 
 1. `git pull`
 2. `git checkout fabric/example`
-3. `git checkout master -- bin/*`
+3. `git checkout master -- bin/`
 
 After running those commands you should be in the `example/fabric` branch and the tools from the [bin/](bin/) directory on the `master` branch will be available for use.
 
