@@ -9,7 +9,7 @@ with open('config.json', 'r') as f:
 if not config.get('fabric_name'):
     print("""ERROR: Fabric domain name not set!
 
-        Set config.json['domain_name'] to a valid domain name in Route53""")
+        Set config.json['fabric_name'] to a valid fabric name (DNS-compatible)""")
 
     exit(1)
 
