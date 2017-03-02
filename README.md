@@ -155,10 +155,10 @@ Below are the detailed steps:
 
   ```bash
   terraform remote config \
-  -backend=s3 \
-  -backend-config="region=us-east-2" \
-  -backend-config="bucket=$(bin/get_state_store_name.py)" \
-  -backend-config="key=$(bin/get_fabric_name.py).tfstate"
+      -backend=s3 \
+      -backend-config="region=us-east-2" \
+      -backend-config="bucket=$(bin/get_state_store_name.py)" \
+      -backend-config="key=$(bin/get_fabric_name.py).tfstate"
   ```
 
 2. Run `terraform get -update=true`
@@ -202,7 +202,8 @@ kops create cluster \
     --networking="kubenet" \
     --ssh-public-key='keys/kubernetes-admin.pub' \
     --target="terraform" \
-    --name="$(terraform output kubernetes_fqdn)" \
+    --name="$(bin/get_fabric_fqdn.py)" \
+    --state="s3://$(bin/get_state_store_name.py)" \
     --out=kubernetes
 ```
 
@@ -216,13 +217,14 @@ Below are the detailed steps:
 
   ```bash
   terraform remote config \
-  -backend=s3 \
-  -backend-config="bucket=$(bin/get_state_store_name.py)" \
-  -backend-config="key=$(bin/get_fabric_name.py)-kubernetes.tfstate"
+      -backend=s3 \
+      -backend-config="region=us-east-2" \
+      -backend-config="bucket=$(cd .. && bin/get_state_store_name.py)" \
+      -backend-config="key=$(cd .. && bin/get_fabric_name.py)-kubernetes.tfstate"
   ```
 
 3. Run `terraform get -update=true`
-4. Run `terraform plan plan.out` and ensure the program exits successfully.
+4. Run `terraform plan -out plan.out` and ensure the program exits successfully.
 5. Run `terraform apply plan.out` and wait for Terraform to finish provisioning resources.
 
 #### Wait for the Kubernetes cluster to form
