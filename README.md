@@ -163,14 +163,14 @@ Below are the detailed steps:
 2. Run `terraform get -update=true`
 
 3. Run `terraform plan -var-file=config.json -out plan.out` and ensure the program exits successfully.
-4. Run `terraform apply -var-file=config.json plan.out` and wait for Terraform to finish provisioning resources.
+4. Run `terraform apply plan.out` and wait for Terraform to finish provisioning resources.
 
 ### Generate the Kubernetes cluster
 
 The high-level steps to get the Kubernetes cluster setup are:
 
 1. Ensure a public-private SSH key pair is generated for the cluster.
-2. Invoke the `kops` too with some parameters that are output from the networking environment deployment.
+2. Invoke the `kops` tool with some parameters that are output from the networking environment deployment.
 3. Terraform generates a deterministic execution plan for the infrastructure it needs to create on AWS for the Kubernetes cluster.
 4. Terraform executes the plan and creates the necessary infrastructure.
 5. Wait for the Kubernetes cluster to deploy.
