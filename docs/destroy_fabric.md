@@ -16,9 +16,9 @@ Each instructions assumes you're starting from the root directory of the reposit
 1. Teardown the Kubernetes cluster:
 
     ```bash
-    export CLUSTER_NAME="$(terraform output cluster_fqdn | tr -d '\n')"
+    export CLUSTER_NAME="$(cd .. && bin/get_fabric_fqdn.py)"
  
-    cd cluster/
+    cd kubernetes/
     terraform plan -var-file=../config.json -destroy -out plan-destroy.out
     terraform apply plan-destroy.out
  
