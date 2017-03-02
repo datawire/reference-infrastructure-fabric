@@ -156,6 +156,7 @@ Below are the detailed steps:
   ```bash
   terraform remote config \
   -backend=s3 \
+  -backend-config="region=us-east-2" \
   -backend-config="bucket=$(bin/get_state_store_name.py)" \
   -backend-config="key=$(bin/get_fabric_name.py).tfstate"
   ```
