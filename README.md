@@ -27,7 +27,7 @@ Similarly the term "modern" is ambiguous, but for the purpose of this architectu
 
 ## What is an "Infrastructure Fabric"?
 
-Infrastructure fabric is the term we use to describe the composite of a dedicated networking environment (VPC), container cluster (Kubernetes), and any strongly associated resources that are used by services in the container cluster (e.g. RDS, Elasticache, Elasticsearch). 
+Infrastructure fabric is the term we use to describe the composite of a dedicated networking environment (VPC), container cluster (Kubernetes), and any strongly associated resources that are used by services in the container cluster (e.g. RDS, Elasticache, Elasticsearch).
 
 ## Technical Design in Five Minutes
 
@@ -47,7 +47,7 @@ Check out the [high-level design document](docs/tech_design_high_level.md) for a
 | ---------------------------------------------------------------------------| ------------------------------------ |
 | [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) | AWS command line interface           |
 | `bash`                                                                     | Popular shell on *Nix. So popular you probably already have it ;) |
-| [Terraform](https://terraform.io)                                          | Infrastructure provisioning tool     | 
+| [Terraform](https://terraform.io)                                          | Infrastructure provisioning tool     |
 | [Kubectl](https://kubernetes.io/docs/user-guide/prereqs/)                  | Kubernetes command line interface    |
 | [kops](https://github.com/kubernetes/kops/releases)                        | Kubernetes cluster provisioning tool |
 | Python >= 3.4                                                              | Popular scripting language. Python is used for some utility scripts in [bin/](bin/) |
@@ -94,7 +94,7 @@ After a moment you should see the following message:
 Updating config.json...
     Region             = us-east-2
     Availability Zones = ['us-east-2a', 'us-east-2b', 'us-east-2c']
-    
+
 Done!
 ```
 
@@ -114,7 +114,7 @@ cat config.json
 }
 ```
 
-Two other variables must be configured in `config.json` before the fabric can be provisioned. The first is the name of the fabric and the second is the DNS name under which the fabric will be created. 
+Two other variables must be configured in `config.json` before the fabric can be provisioned. The first is the name of the fabric and the second is the DNS name under which the fabric will be created.
 
 Open `config.json` and then find the `fabric_name` field and update it with an appropriate name. The name will be normalized to lowercase alphanumeric characters only so it is strongly recommended that you pick a name that makes sense once that is done.
 
@@ -236,6 +236,13 @@ The Kubernetes cluster provisions asynchronously so even though Terraform exited
 There are really only straight forward strategies:
 
 1. Use smaller EC2 instance sizes for the Kubernetes masters and nodes.
+
+    ```bash
+    kops create cluster \
+        --master-size=t2.nano --node-size=t2.nano \
+      [ ... ]
+    ```
+
 2. Purchase EC2 reserved instances for the types of nodes you know you need.
 
 Other options exist such as EC2 spot instances or refactoring your application to be less resource intensive but those topics are outside the scope of this guide.
@@ -246,7 +253,7 @@ Other options exist such as EC2 spot instances or refactoring your application t
 
 Coming Soon!
 
-### Check out Datawire's Reference Application - Snackchat! 
+### Check out Datawire's Reference Application - Snackchat!
 
 Coming Soon!
 
@@ -259,6 +266,11 @@ Coming Soon!
 **A:** How do I delete a fabric?
 
 **Q:** Check out the [Tearing down a Fabric document](docs/destroy_fabric.md). It's very straightforward.
+
+**A:** Why are your questions notated as answers?
+
+**Q:** What?
+
 
 ## License
 
