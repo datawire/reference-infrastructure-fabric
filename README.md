@@ -57,13 +57,15 @@ Before the Kubernetes cluster can be provisioned, a public DNS record in AWS Rou
 
 A Kubernetes cluster is created in the new VPC and set up with a master node per availability zone and then the worker nodes (sometimes called "kubelets" or "minions" on the internet for historical reasons) are created across the availability zones as well. This design provides a high availability ("HA") cluster.
 
+
+
 ## Getting Started
 
 ### Prerequisites
 
-1. An active AWS account and AWS API credentials. Please refer to our five-minute [AWS Bootstrapping](docs/aws_bootstrap.md) guide if you do not have an AWS account or AWS API credentials.
+You'll need all of the following to get through the guide. We'll go into more detail on how to set everything up in later sections.
 
-2. Install the following third-party tools.
+1. All of the following third-party tools
 
 | Tool                                                                       | Description                          |
 | ---------------------------------------------------------------------------| ------------------------------------ |
@@ -72,11 +74,35 @@ A Kubernetes cluster is created in the new VPC and set up with a master node per
 | [Terraform](https://terraform.io)                                          | Infrastructure provisioning tool     |
 | [Kubectl](https://kubernetes.io/docs/user-guide/prereqs/)                  | Kubernetes command line interface    |
 | [kops](https://github.com/kubernetes/kops/releases)                        | Kubernetes cluster provisioning tool |
-| Python >= 3.4                                                              | Popular scripting language. Python is used for some utility scripts in [bin/](bin/) |
+| [Python](https://www.python.org/) >= 3.4                                   | Popular scripting language. Python is used for some utility scripts in [bin/](bin/) |
 
-**NOTE:** You really need all of these tools. A future guide will simplify the requirements to get set up but we want this to be as vanilla an introduction as possible to using Kubernetes with AWS.
+**NOTE:** You really need all of these tools. A future guide will simplify the requirements to get set up.
 
-3. A domain name and hosted DNS zone in AWS Route 53 that you can dedicate to the fabric. This domain name will have several subdomains attached to it by the time you finish this guide. To get set up with Route 53 see our [Route 53 Bootstrapping](docs/route53_bootstrap.md) guide.
+2. An active AWS account and AWS API credentials.
+
+3. A domain name and hosted DNS zone in AWS Route 53 that you can dedicate to the fabric. This domain name will have several subdomains attached to it by the time you finish this guide.
+
+### Install third-party tools
+
+Follow the links below for information on installing each tool.
+
+[AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html)
+[Terraform](https://terraform.io)
+[Kubectl](https://kubernetes.io/docs/user-guide/prereqs/)
+[kops](https://github.com/kubernetes/kops/releases)
+[Python](https://www.python.org/) >= 3.4
+
+### Bootstrap AWS
+
+Before we begin a couple things need to be done on the AWS account.
+
+1. Get an AWS IAM user and API credentials
+
+  Follow [Bootstrapping AWS](docs/aws_bootstrap.md) for instructions on setting up an AWS user or skip this step if you already have a user setup.
+
+2. Get a domain name for use with the fabric
+
+  Follow [Bootstrapping Route 53](docs/route53_bootstrap.md) for instructions on setting up Route 53 properly or skip this step if you already have a domain setup.
 
 ### Clone Repository
 
@@ -91,18 +117,6 @@ The repository is setup as a monorepo that uses branches to keep environment def
 3. `git checkout master -- bin/`
 
 After running those commands you should be in the `example/fabric` branch and the tools from the [bin/](bin/) directory on the `master` branch will be available for use.
-
-### Bootstrapping AWS
-
-Before we begin a couple things need to be done on the AWS account.
-
-1. Get an AWS IAM user and API credentials
-
-  Follow [Bootstrapping AWS](docs/aws_bootstrap.md) for instructions on setting up an AWS user or skip this step if you already have a user setup.
-
-2. Get a domain name for use with the fabric
-
-  Follow [Bootstrapping Route 53](docs/route53_bootstrap.md) for instructions on setting up Route 53 properly or skip this step if you already have a domain setup.
 
 ### Configure the Fabric name, DNS, region and availability zones
 
@@ -274,6 +288,8 @@ Here are two straightforward strategies:
 2. Purchase EC2 reserved instances for the types of nodes you know you need.
 
 Other options exist such as EC2 spot instances or refactoring your application to be less resource intensive, but those topics are outside the scope of this guide.
+
+
 
 ## Next Steps
 
