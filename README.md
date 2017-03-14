@@ -65,24 +65,24 @@ A Kubernetes cluster is created in the new VPC and set up with a master node per
 
 You'll need all of the following to get through the guide. We'll go into more detail on how to set everything up in later sections.
 
-1. All of the following third-party tools
+- All of the following third-party tools
 
 | Tool                                                                       | Description                          |
 | ---------------------------------------------------------------------------| ------------------------------------ |
 | [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) | AWS command line interface           |
 | `bash`                                                                     | Popular shell on *Nix. So popular you probably already have it! |
-| [Terraform](https://www.terraform.io/intro/getting-started/install.html)                                          | Infrastructure provisioning tool     |
+| [Terraform](https://www.terraform.io/intro/getting-started/install.html)   | Infrastructure provisioning tool     |
 | [Kubectl](https://kubernetes.io/docs/user-guide/prereqs/)                  | Kubernetes command line interface    |
 | [kops](https://github.com/kubernetes/kops/releases)                        | Kubernetes cluster provisioning tool |
 | [Python](https://www.python.org/) >= 3.4                                   | Popular scripting language. Python is used for some utility scripts in [bin/](bin/) |
 
 **NOTE:** You really need all of these tools. A future guide will simplify the requirements to get set up.
 
-2. An active AWS account and AWS API credentials.
+- An active AWS account and AWS API credentials.
 
-3. A domain name and hosted DNS zone in AWS Route 53 that you can dedicate to the fabric. This domain name will have several subdomains attached to it by the time you finish this guide.
+- A domain name and hosted DNS zone in AWS Route 53 that you can dedicate to the fabric. This domain name will have several subdomains attached to it by the time you finish this guide.
 
-### 1 Install third-party tools
+### 1. Install third-party tools
 
 Follow the links below for information on installing each tool.
 
@@ -92,7 +92,7 @@ Follow the links below for information on installing each tool.
 - [kops](https://github.com/kubernetes/kops/releases)
 - [Python](https://www.python.org/) >= 3.4
 
-### 2 Bootstrap AWS
+### 2. Bootstrap AWS
 
 Before we begin a couple things need to be done on the AWS account.
 
@@ -104,11 +104,11 @@ Before we begin a couple things need to be done on the AWS account.
 
     Follow [Bootstrapping Route 53](docs/route53_bootstrap.md) for instructions on setting up Route 53 properly or skip this step if you already have a domain setup.
 
-### 3 Clone Repository
+### 3. Clone Repository
 
 Clone this repository into your own account or organization. The cloned repository contains two branches: `master` and `fabric/example`. The `master` branch contains documentation and some specialized scripts for bootstrapping AWS and additional fabrics. The `fabric/example` branch is an example repository that is nearly ready for use.
 
-### 4 Checkout the example branch then overlay the master branch tools onto it
+### 4. Checkout the example branch then overlay the master branch tools onto it
 
 The repository is setup as a monorepo that uses branches to keep environment definitions independent. Run the following commands to get where you want to be:
 
@@ -118,7 +118,7 @@ The repository is setup as a monorepo that uses branches to keep environment def
 
 After running those commands you should be in the `example/fabric` branch and the tools from the [bin/](bin/) directory on the `master` branch will be available for use.
 
-### 5 Configure the Fabric name, DNS, region and availability zones
+### 5. Configure the Fabric name, DNS, region and availability zones
 
 Every AWS *account* is allocated a different set of availability zones that can be used within a region. For example, in the `us-east-1` region, Datawire does not have access to the `us-east-1b` zone while other AWS accounts might. In order to ensure consistent deterministic runs of Terraform, it is important to set the zones in the configuration explicitly.
 
@@ -162,7 +162,7 @@ Open `config.json` and then update the `fabric_name` field with a DNS-compatible
 
 Also, find and update the `domain_name` field with a valid domain name that is owned and available in Amazon Route 53.
 
-### 6 Create S3 bucket for Terraform and Kubernetes state storage
+### 6. Create S3 bucket for Terraform and Kubernetes state storage
 
 Terraform operates like a thermostat, which means that it reconciles the desired world (`*.tf` templates) with the provisioned world by computing a difference between a state file and the provisioned infrastructure. The provisioned resources are tracked in the system state file that maps actual system identifiers to resources described in the configuration templates users define (e.g., `vpc-abcxyz -> aws_vpc.kubernetes`). When Terraform detects a difference from the state file then it creates or updates the resource where possible (some things are immutable and cannot just be changed on-demand).
 
@@ -184,7 +184,7 @@ bin/setup_state_store.py
 Bucket: k736-net-state
 ```
 
-### 7 Generate the AWS networking environment
+### 7. Generate the AWS networking environment
 
 The high-level steps to get the networking set up are:
 
@@ -208,7 +208,7 @@ Below are the detailed steps:
 3. Run `terraform plan -var-file=config.json -out plan.out` and ensure the program exits successfully.
 4. Run `terraform apply plan.out` and wait for Terraform to finish provisioning resources.
 
-### 8 Generate the Kubernetes cluster
+### 8. Generate the Kubernetes cluster
 
 The high-level steps to get the Kubernetes cluster setup are:
 
