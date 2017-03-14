@@ -61,7 +61,7 @@ A Kubernetes cluster is created in the new VPC and set up with a master node per
 
 ## Getting Started
 
-### Prerequisites
+### 0 Prerequisites
 
 You'll need all of the following to get through the guide. We'll go into more detail on how to set everything up in later sections.
 
@@ -82,33 +82,33 @@ You'll need all of the following to get through the guide. We'll go into more de
 
 3. A domain name and hosted DNS zone in AWS Route 53 that you can dedicate to the fabric. This domain name will have several subdomains attached to it by the time you finish this guide.
 
-### Install third-party tools
+### 1 Install third-party tools
 
 Follow the links below for information on installing each tool.
 
-[AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html)
-[Terraform](https://terraform.io)
-[Kubectl](https://kubernetes.io/docs/user-guide/prereqs/)
-[kops](https://github.com/kubernetes/kops/releases)
-[Python](https://www.python.org/) >= 3.4
+- [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html)
+- [Terraform](https://terraform.io)
+- [Kubectl](https://kubernetes.io/docs/user-guide/prereqs/)
+- [kops](https://github.com/kubernetes/kops/releases)
+- [Python](https://www.python.org/) >= 3.4
 
-### Bootstrap AWS
+### 2 Bootstrap AWS
 
 Before we begin a couple things need to be done on the AWS account.
 
 1. Get an AWS IAM user and API credentials
 
-  Follow [Bootstrapping AWS](docs/aws_bootstrap.md) for instructions on setting up an AWS user or skip this step if you already have a user setup.
+    Follow [Bootstrapping AWS](docs/aws_bootstrap.md) for instructions on setting up an AWS user or skip this step if you already have a user setup.
 
 2. Get a domain name for use with the fabric
 
-  Follow [Bootstrapping Route 53](docs/route53_bootstrap.md) for instructions on setting up Route 53 properly or skip this step if you already have a domain setup.
+    Follow [Bootstrapping Route 53](docs/route53_bootstrap.md) for instructions on setting up Route 53 properly or skip this step if you already have a domain setup.
 
-### Clone Repository
+### 3 Clone Repository
 
 Clone this repository into your own account or organization. The cloned repository contains two branches: `master` and `fabric/example`. The `master` branch contains documentation and some specialized scripts for bootstrapping AWS and additional fabrics. The `fabric/example` branch is an example repository that is nearly ready for use.
 
-### Checkout the example branch then overlay the master branch tools onto it
+### 4 Checkout the example branch then overlay the master branch tools onto it
 
 The repository is setup as a monorepo that uses branches to keep environment definitions independent. Run the following commands to get where you want to be:
 
@@ -118,7 +118,7 @@ The repository is setup as a monorepo that uses branches to keep environment def
 
 After running those commands you should be in the `example/fabric` branch and the tools from the [bin/](bin/) directory on the `master` branch will be available for use.
 
-### Configure the Fabric name, DNS, region and availability zones
+### 5 Configure the Fabric name, DNS, region and availability zones
 
 Every AWS *account* is allocated a different set of availability zones that can be used within a region. For example, in the `us-east-1` region, Datawire does not have access to the `us-east-1b` zone while other AWS accounts might. In order to ensure consistent deterministic runs of Terraform, it is important to set the zones in the configuration explicitly.
 
@@ -162,7 +162,7 @@ Open `config.json` and then update the `fabric_name` field with a DNS-compatible
 
 Also, find and update the `domain_name` field with a valid domain name that is owned and available in Amazon Route 53.
 
-### Create S3 bucket for Terraform and Kubernetes state storage
+### 6 Create S3 bucket for Terraform and Kubernetes state storage
 
 Terraform operates like a thermostat, which means that it reconciles the desired world (`*.tf` templates) with the provisioned world by computing a difference between a state file and the provisioned infrastructure. The provisioned resources are tracked in the system state file that maps actual system identifiers to resources described in the configuration templates users define (e.g., `vpc-abcxyz -> aws_vpc.kubernetes`). When Terraform detects a difference from the state file then it creates or updates the resource where possible (some things are immutable and cannot just be changed on-demand).
 
@@ -184,7 +184,7 @@ bin/setup_state_store.py
 Bucket: k736-net-state
 ```
 
-### Generate the AWS networking environment
+### 7 Generate the AWS networking environment
 
 The high-level steps to get the networking set up are:
 
@@ -208,17 +208,16 @@ Below are the detailed steps:
 3. Run `terraform plan -var-file=config.json -out plan.out` and ensure the program exits successfully.
 4. Run `terraform apply plan.out` and wait for Terraform to finish provisioning resources.
 
-### Generate the Kubernetes cluster
+### 8 Generate the Kubernetes cluster
 
 The high-level steps to get the Kubernetes cluster setup are:
 
 1. Ensure a public-private SSH key pair is generated for the cluster.
 2. Invoke the `kops` tool with some parameters that are output from the networking environment deployment.
-3. Terraform generates a deterministic execution plan for the infrastructure it needs to create on AWS for the Kubernetes cluster.
-4. Terraform executes the plan and creates the necessary infrastructure.
-5. Wait for the Kubernetes cluster to deploy.
+3. Terraform generates a deterministic execution plan for the infrastructure it needs to create on AWS for the Kubernetes cluster. Then Terraform executes the plan and creates the necessary infrastructure.
+4. Wait for the Kubernetes cluster to deploy.
 
-#### SSH public/private key pair
+#### 8.1 SSH public/private key pair
 
 It is extremely unlikely you will need to SSH into the Kubernetes nodes, however, it is a good best practice to use a known or freshly-generated SSH key rather than relying on any tool or service to generate one. To generate a new key pair run the following command:
 
@@ -232,7 +231,7 @@ Ensure you the private key is read/write only by your user as well:
 
 `chmod 600 ~/.ssh/kubernetes-admin`
 
-#### Invoke Kops to generate the Terraform template for Kubernetes
+#### 8.2 Invoke Kops to generate the Terraform template for Kubernetes
 
 Kops takes in a bunch of parameters and generates a Terraform template that can be used to create a new cluster. The next command only generates the Terraform template; it does not affect your existing infrastructure.
 
@@ -249,7 +248,7 @@ kops create cluster \
     --out=kubernetes
 ```
 
-#### Plan and Apply the Kubernetes cluster with Terraform
+#### 8.3 Plan and Apply the Kubernetes cluster with Terraform
 
 Below are the detailed steps:
 
@@ -269,7 +268,7 @@ Below are the detailed steps:
 4. Run `terraform plan -out plan.out` and ensure the program exits successfully.
 5. Run `terraform apply plan.out` and wait for Terraform to finish provisioning resources.
 
-#### Wait for the Kubernetes cluster to form
+#### 8.4 Wait for the Kubernetes cluster to form
 
 The Kubernetes cluster provisions asynchronously so even though Terraform exited almost immediately it's not likely that the cluster itself is running. To determine if the cluster is up you need to poll the API server. You can do this by running `kubectl cluster-info`, which will eventually return the API server address.
 
