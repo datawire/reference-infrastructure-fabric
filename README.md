@@ -61,11 +61,15 @@ A Kubernetes cluster is created in the new VPC and set up with a master node per
 
 ## Getting Started
 
-### 0 Prerequisites
+### 0. Prerequisites
 
 You'll need all of the following to get through the guide. We'll go into more detail on how to set everything up in later sections.
 
-- All of the following third-party tools
+1. An active AWS account and AWS API credentials.
+
+2. A domain name and hosted DNS zone in AWS Route 53 that you can dedicate to the fabric. This domain name will have several subdomains attached to it by the time you finish this guide.
+
+3. All of the following third-party tools
 
 | Tool                                                                       | Description                          |
 | ---------------------------------------------------------------------------| ------------------------------------ |
@@ -77,10 +81,6 @@ You'll need all of the following to get through the guide. We'll go into more de
 | [Python](https://www.python.org/) >= 3.4                                   | Popular scripting language. Python is used for some utility scripts in [bin/](bin/) |
 
 **NOTE:** You really need all of these tools. A future guide will simplify the requirements to get set up.
-
-- An active AWS account and AWS API credentials.
-
-- A domain name and hosted DNS zone in AWS Route 53 that you can dedicate to the fabric. This domain name will have several subdomains attached to it by the time you finish this guide.
 
 ### 1. Install third-party tools
 
@@ -96,13 +96,9 @@ Follow the links below for information on installing each tool.
 
 Before we begin a couple things need to be done on the AWS account.
 
-1. Get an AWS IAM user and API credentials
+1. Get an AWS IAM user and API credentials. Follow [Bootstrapping AWS](docs/aws_bootstrap.md) for instructions on setting up an AWS user or skip this step if you already have a user setup.
 
-    Follow [Bootstrapping AWS](docs/aws_bootstrap.md) for instructions on setting up an AWS user or skip this step if you already have a user setup.
-
-2. Get a domain name for use with the fabric
-
-    Follow [Bootstrapping Route 53](docs/route53_bootstrap.md) for instructions on setting up Route 53 properly or skip this step if you already have a domain setup.
+2. Get a domain name for use with the fabric. Follow [Bootstrapping Route 53](docs/route53_bootstrap.md) for instructions on setting up Route 53 properly or skip this step if you already have a domain setup.
 
 ### 3. Clone Repository
 
