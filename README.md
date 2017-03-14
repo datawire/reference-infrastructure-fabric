@@ -287,17 +287,13 @@ Coming Soon!
 
 ## FAQ
 
-**A:** Why did you write this guide?
+**Q:** Why did you write this guide?
 
-**Q:** We use this guide to run Kubernetes clusters at Datawire and we thought it was useful information that other developers would find useful!
+**A:** We use this guide to run Kubernetes clusters at Datawire and we thought it was useful information that other developers would find useful!
 
-**A:** How do I delete a fabric?
+**Q:** How do I delete a fabric?
 
-**Q:** Check out the [Tearing down a Fabric](docs/destroy_fabric.md) document. It's very straightforward.
-
-**A:** Why are the questions marked as answers?
-
-**Q:** What?
+**A:** Check out the [Tearing down a Fabric](docs/destroy_fabric.md) document. It's very straightforward.
 
 
 ## License
