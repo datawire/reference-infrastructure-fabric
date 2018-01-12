@@ -75,7 +75,7 @@ You'll need all of the following to get through the guide. We'll go into more de
 | ---------------------------------------------------------------------------| ------------------------------------ |
 | [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) | AWS command line interface           |
 | `bash`                                                                     | Popular shell on *Nix. So popular you probably already have it! |
-| [Terraform](https://www.terraform.io/intro/getting-started/install.html)   | Infrastructure provisioning tool     |
+| [Terraform v0.8.8](https://www.terraform.io/intro/getting-started/install.html)   | Infrastructure provisioning tool     |
 | [Kubectl](https://kubernetes.io/docs/user-guide/prereqs/)                  | Kubernetes command line interface    |
 | [kops](https://github.com/kubernetes/kops/releases)                        | Kubernetes cluster provisioning tool |
 | [Python](https://www.python.org/) >= 3.4                                   | Popular scripting language. Python is used for some utility scripts in [bin/](bin/) |
